@@ -49,3 +49,11 @@ void connect(TreeLinkNode *root)
         if(root==NULL) return;
         connectTree(root, root->left, root->right);
     }
+
+
+
+
+
+
+
+    
