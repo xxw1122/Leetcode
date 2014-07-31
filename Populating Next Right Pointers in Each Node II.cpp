@@ -18,7 +18,7 @@ TreeLinkNode* findnode(TreeLinkNode *root)
             if(root==NULL) return NULL;
         }
     if(root->left!=NULL) return root->left;
-    else return root->right;
+    return root->right;
 }
 
 void connectTree(TreeLinkNode *root,TreeLinkNode *lchild,TreeLinkNode *rchild)
@@ -27,8 +27,8 @@ void connectTree(TreeLinkNode *root,TreeLinkNode *lchild,TreeLinkNode *rchild)
             {
                 lchild->next=rchild;
                 rchild->next=findnode(root->next);
-                connectTree(lchild, lchild->left, lchild->right);
                 connectTree(rchild, rchild->left, rchild->right);
+                connectTree(lchild, lchild->left, lchild->right);
             }
         else if(lchild!=NULL&&rchild==NULL)
             {
@@ -49,11 +49,3 @@ void connect(TreeLinkNode *root)
         if(root==NULL) return;
         connectTree(root, root->left, root->right);
     }
-
-
-
-
-
-
-
-    
