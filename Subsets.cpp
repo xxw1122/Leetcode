@@ -1,5 +1,6 @@
 #include<iostream>
 #include<vector>
+#include<algorithm>
 
 static bool cmp(int x,int y){
     return x<y;
