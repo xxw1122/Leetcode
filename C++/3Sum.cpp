@@ -1,54 +1,43 @@
 #include <iostream>
 #include <vector>
-#include <unordered_map>
 #include <algorithm>
-#include <iterator>
 
 using namespace std;
 
-vector<vector<int> > threeSum(vector<int> &num) {
-  int len=num.size();
-  unordered_map<int,vector<int> >st;
-  unordered_map<int,vector<int> >::iterator it;
-  vector<int>::iterator it1;
-  sort(num.begin(),num.end());
-  for(int i=0;i<len;i++){
-    if(st.count(num[i])==0){
-      vector<int>vec1;
-      vec1.push_back(i);
-      st.insert(make_pair(num[i],vec1));
-    }
-    else{
-      it=st.find(num[i]);
-      vector<int> vec1;
-      for(int j=0;j<((*it).second).size();j++){
-        vec.push_back(((*it).second)[j]);
-      }
-      vec1.push_back(i);
-      st.erase(it);
-      st.insert(make_pair(num[i],vec1));
-    }
-  }
-  vector<vector<int> >vec;
-  for(int i=0;i<len;i++){
-    for(int j=i+1;j<len;j++){
-      int cnt=0-num[i]-num[j];
-      if(st.count(cnt)){
-        for(int k=0;k<st[cnt].size();k++){
-          if(i!=st[cnt][k]&&j!=st[cnt][k]){
-            vector<int> vec1;
-            vec1.push_back(num[i]);
-            vec1.push_back(num[j]);
-            vec1.push_back(cnt);
-            sort(vec1.begin(),vec1.end());
-            vec.push_back(vec1);
-          }
+vector<vector<int> > threeSum(vector<int> &num){
+    sort(num.begin(),num.end());
+    vector<vector<int> >vec;
+    int len=num.size();
+    for(int i=0;i+2<len;i++){
+        if(i>0&&num[i]==num[i-1])
+                continue;
+        int j=i+1,k=len-1;
+        int cnt=-num[i];
+        while(k>j){
+            if(j>i+1&&num[j]==num[j-1]){
+                j++;
+                continue;
+            }
+            if(k<len-1&&num[k]==num[k+1]){
+                k--;
+                continue;
+            }
+            int cur=num[j]+num[k];
+            if(cur>cnt){
+                k--;
+            }
+            else if(cur<cnt){
+                j++;
+            }
+            else if(cur==cnt){
+                vector<int> vec1;
+                vec1.push_back(num[i]);
+                vec1.push_back(num[j]);
+                vec1.push_back(num[k]);
+                vec.push_back(vec1);
+                j++;
+            }
         }
-      }
     }
-  }
-  sort(vec.begin(),vec.end());
-  it1=unique(vec.begin(),vec.end());
-  vector<vector<int> >vec1(vec.begin(),it1);
-  return vec1;
+    return vec;
 }
