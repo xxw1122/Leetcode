@@ -1,54 +1,85 @@
 class Solution {
-public:
-    void getTrans(vector<string> &tmp, unordered_map<string, vector<string>> &pre, string &end)
+private:
+    int caldis(string x,string y)
     {
-        tmp.push_back(end);
-        if(pre[end].empty())
-            re.push_back(vector<string>(tmp.rbegin(),tmp.rend()));
-        for(auto itr=pre[end].begin();itr!=pre[end].end();itr++)
-            getTrans(tmp,pre,*itr);
-        tmp.pop_back();
+        int dis = 0;
+        for(int i=0; i<x.length(); i++)
+            if(x[i]!=y[i])
+                dis++;
+        return dis;
     }
-    vector<vector<string>> findLadders(string start, string end, unordered_set<string> &dict) {
-        // IMPORTANT: Please reset any member data you declared, as
-        // the same Solution instance will be reused for each test case.
-        re.clear();
-        if(dict.empty()) return re;
-        unordered_map<string, vector<string>> preMap;
-        vector<unordered_set<string>> bfs(2);
-        bfs[1].insert(start);
-        int pre=0;
-        int curr=1;
-        while(1)
+    void dfs(unordered_map<string,vector<string> > &mp,string cur,vector<string> &now,vector<vector<string> > &ans)
+    {
+        now.push_back(cur);
+        if(mp[cur].size()==0)
         {
-            pre=!pre;
-            curr=!curr;
-            bfs[curr].clear();
-            for(auto itr=bfs[pre].begin();itr!=bfs[pre].end();itr++) dict.erase(*itr);
-            for(auto itr=bfs[pre].begin();itr!=bfs[pre].end();itr++)
+            vector<string> tmp(now);
+            reverse(tmp.begin(),tmp.end());
+            ans.push_back(tmp);
+            now.pop_back();
+            return;
+        }
+        for(int i=0; i<mp[cur].size(); i++)
+        {
+            dfs(mp,mp[cur][i],now,ans);
+        }
+        now.pop_back();
+    }
+public:
+    vector<vector<string> > findLadders(string start, string end, unordered_set<string> &dict) {
+        vector<string> now;
+        vector<vector<string> > ans;
+        if(start==end)
+        {
+            now.push_back(end);
+            ans.push_back(now);
+            return ans;
+        }
+        unordered_set<string> qu[2];
+        unordered_map<string,vector<string> > mp;
+        for(auto it=dict.begin(); it!=dict.end(); it++)
+        {
+            mp[*it] = vector<string>();
+        }
+        qu[0].insert(start);
+        int i=0;
+        bool isdone = false;
+        while(!qu[i].empty())
+        {
+            i = 1-i;
+            qu[i].clear();
+            for(auto it=qu[1-i].begin(); it!=qu[1-i].end(); it++)
             {
-                string s=(*itr);
-                for(int i=0;i<s.length();i++)
+                if(caldis(*it,end)==1)
                 {
-                    char origchar=s[i];
-                    for(char c='a';c<='z';c++)
+                    isdone = true;
+                    mp[end].push_back(*it);
+                }
+                dict.erase(*it);
+            }
+            if(isdone) break;
+            for(auto it=qu[1-i].begin(); it!=qu[1-i].end(); it++)
+            {
+                string cur = *it;
+                for(int j=0; j<cur.size(); j++)
+                {
+                    for(char ch='a'; ch<='z'; ch++)
                     {
-                        if(c!=origchar)
+                        string tmp = cur;
+                        tmp[j] = ch;
+                        if(dict.find(tmp)!=dict.end())
                         {
-                            s[i]=c;
-                            if(dict.count(s)) {preMap[s].push_back(*itr); bfs[curr].insert(s);}
+                            mp[tmp].push_back(cur);
+                            qu[i].insert(tmp);
                         }
                     }
-                    s[i]=origchar;
                 }
             }
-            if(bfs[curr].count(end)) break;
-            if(bfs[curr].empty()) return re;
         }
-        vector<string> tmp;
-        getTrans(tmp,preMap,end);
-        return re;
+        ans.clear();
+        now.clear();
+        if(!isdone) return ans;
+        dfs(mp,end,now,ans);
+        return ans;
     }
-private:
-    vector<vector<string>> re;
 };
