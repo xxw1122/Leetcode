@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 
+
 class TreeNode:
     def __init__(self, x):
         self.val = x
         self.left = None
         self.right = None
 
-def levelOrder(self, root):
+def zigzagLevelOrder(self, root):
     q = []
     p = []
     seq = []
@@ -33,5 +34,6 @@ def levelOrder(self, root):
                     q.append(node.left)
                 if node.right != None:
                     q.append(node.right)
+            s.reverse()
             seq.append(s)
     return seq
