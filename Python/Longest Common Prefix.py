@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+
 def longestCommonPrefix(self, strs):
     s = ''
     num = 0

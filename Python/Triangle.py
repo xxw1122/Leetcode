@@ -1,4 +1,5 @@
-#!/usr/bin/ERNV python
+#!/usr/bin/env python
+
 
 def minimumTotal(self, triangle):
     num = len(triangle)

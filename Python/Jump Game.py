@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+
 def canJump(self, A):
     lenth = len(A) - 1
     if lenth <= 0:
