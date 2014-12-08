@@ -1,35 +1,21 @@
-#include<iostream>
+//cpp code
 
-void rev(int A[],int begin,int end)
-    {
-        if(begin>=end) return;
-        int mid=(begin+end+1)/2;
-        for(int i=begin;i<mid;i++)
-            {
-                int cnt=A[i];
-                A[i]=A[end-i+begin];
-                A[end-i+begin]=cnt;
+class Solution {
+public:
+    int search(int A[], int n, int target) {
+        int left = 0, right = n - 1, mid;
+        while(left <= right){
+            mid = (left + right) / 2;
+            if(A[mid] == target) return mid;
+            if(A[mid] < A[right]){
+                if(target > A[mid] && target <= A[right]) left = mid + 1;
+                else right = mid - 1;
             }
-    }
-
-int search(int A[], int n, int target)
-    {
-        int i=0;
-        for(i=1;i<n;i++)
-            {
-                if(A[i]<A[i-1]) break;
+            else{
+                if(target < A[mid] && target >= A[left]) right = mid - 1;
+                else left = mid + 1;
             }
-        rev(A,0,i-1);
-        rev(A,i,n-1);
-        rev(A,0,n-1);
-        int left=0,right=n-1;
-        int mid;
-        while(left<=right)
-            {
-                mid=(right+left)/2;
-                if(A[mid]==target) return (mid+i)%n;
-                else if(A[mid]>target) right=mid-1;
-                else left=mid+1;
-            }
+        }
         return -1;
     }
+};
