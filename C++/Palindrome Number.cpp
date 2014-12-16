@@ -20,7 +20,6 @@ bool isPalindrome(int x)
             int right=x%cur;
             if(left!=right) return false;
             x=x/cur;
-            cur=cur;
             cnt=cnt/100;
         }
         return true;
