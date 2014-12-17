@@ -1,14 +1,17 @@
-#include <unordered_set>
-
-int firstMissingPositive(int A[], int n) {
-    int maxnum=-1;
-    unordered_set<int> st;
-    for(int i=0;i<n;i++){
-      maxnum=max(maxnum,A[i]);
-      st.insert(A[i]);
+class Solution {
+public:
+    int firstMissingPositive(int A[], int n) {
+        int pos = 0;
+        while(pos < n){
+            int cnt = A[pos] - 1;
+            if(A[pos] != pos + 1 && A[pos] >= 1 && A[pos] <= n && A[pos] != A[cnt]){
+                swap(A[pos], A[cnt]);
+            }
+            else pos ++;
+        }
+        for(int i = 0; i < n; i++){
+            if(A[i] != i + 1) return i + 1;
+        }
+        return n + 1;
     }
-    if(maxnum<=0) return 1;
-    for(int i=1;i<=maxnum+1;i++){
-      if(st.count(i)==0) return i;
-    }
-}
+};
