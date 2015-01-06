@@ -1,57 +1,18 @@
-#include <iostream>
-
-using namespace std;
-
-int calculate(int start,int end,int A[]){
-    int sum=0;
-    int height=min(A[start],A[end]);
-    int cnt=(end-start-1)*height;
-    for(int i=start+1;i<end;i++){
-        if(A[i]<=height) sum=sum+A[i];
-        else sum=sum+height;
+class Solution {
+public:
+    int trap(int A[], int n) {
+        int *leftmaxhigh = new int[n];
+        int leftmax = 0;
+        for(int i = 0; i < n; i++){
+            if(A[i] > leftmax) leftmax = A[i];
+            leftmaxhigh[i] = leftmax;
+        }
+        int rightmax = 0, sum = 0;
+        for(int i = n - 1; i >= 0; i--){
+            if(A[i] < rightmax) rightmax = A[i];
+            if(min(rightmax, leftmaxhigh[i]) > A[i])
+                sum += min(rightmax, leftmaxhigh[i]) - A[i];
+        }
+        return sum;
     }
-    return cnt-sum;
-}
-
-int trap(int A[], int n) {
-    int sum=0;
-    int start,cnt,end;
-    for(int i=0;i<n;i++){
-        if(A[i]!=0){
-            start=i;
-            break;
-        }
-    }
-    if(start>=n-1) return sum;
-    cnt=start+1;
-    while(cnt<n){
-        int tag=1;
-        int index;
-        for(int i=cnt;i<n;i++){
-            if(A[i]>=A[start]){
-                index=i;
-                tag=0;
-                break;
-            }
-        }
-        if(tag==0){
-            sum=sum+calculate(start, index, A);
-            start=index;
-            cnt=start+1;
-        }
-        else{
-            int maxh=A[cnt];
-            index=cnt;
-            for(int i=cnt;i<n;i++){
-                if(A[i]>maxh){
-                    maxh=A[i];
-                    index=i;
-                }
-            }
-            sum=sum+calculate(start, index, A);
-            start=index;
-            cnt=start+1;
-        }
-    }
-    return sum;
-}
+};
