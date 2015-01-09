@@ -1,75 +1,35 @@
-#include <vector>
-#include <algorithm>
-#include <iterator>
-#include <queue>
-
-using namespace std;
-
+/**
+   Definition for singly-linked list.*/
 struct ListNode {
     int val;
     ListNode *next;
     ListNode(int x) : val(x), next(NULL) {}
 };
 
-struct Point {
-	int x;
-	int y;
-	bool operator <(const Point b) const {
-		return x > b.x;
-	}
+
+class Solution {
+private:
+    struct cmp{
+    bool operator ()(const ListNode *a, const ListNode *b){
+        return a->val > b->val;
+    }
 };
-
-static bool cmp(ListNode* cnt){
-    if(cnt==NULL) return true;
-    else return false;
-}
-
-ListNode *mergeKLists(vector<ListNode *> &lists) {
-    if(lists.size()==0) return NULL;
-    if(lists.size()==1) return lists[0];
-    vector<ListNode*>::iterator it;
-    it=remove_if(lists.begin(), lists.end(),cmp);
-    lists.erase(it, lists.end());
-    if(lists.empty()) return NULL;
-    priority_queue<Point>que;
-    ListNode *pre,*prenode=NULL;
-    Point p;
-    for(int i=0;i<lists.size();i++){
-        p.x=lists[i]->val;
-        p.y=i;
-        que.push(p);
-        lists[i]=lists[i]->next;
-    }
-    while(!que.empty()){
-        if(prenode==NULL){
-            ListNode *node=new ListNode(sizeof(ListNode));
-            node->val=que.top().x;
-            prenode=node;
-            pre=node;
-            int cnt=que.top().y;
-            que.pop();
-            if(lists[cnt]!=NULL){
-                p.x=lists[cnt]->val;
-                p.y=cnt;
-                que.push(p);
-                lists[cnt]=lists[cnt]->next;
-            }
+public:
+    ListNode *mergeKLists(vector<ListNode *> &lists) {
+        int n = lists.size();
+        priority_queue<ListNode*, vector<ListNode*>, cmp> que;
+        for(int i = 0; i < n; i++){
+            if(lists[i] != NULL) que.push(lists[i]);
         }
-        else{
-            ListNode *node=new ListNode(sizeof(ListNode));
-            node->val=que.top().x;
-            prenode->next=node;
-            prenode=prenode->next;
-            int cnt=que.top().y;
+        ListNode *dummy = new ListNode(0);
+        ListNode *p = dummy;
+        while(!que.empty()){
+            ListNode *node = que.top();
             que.pop();
-            if(lists[cnt]!=NULL){
-                p.x=lists[cnt]->val;
-                p.y=cnt;
-                que.push(p);
-                lists[cnt]=lists[cnt]->next;
-            }
+            p->next = node;
+            p = p->next;
+            if(node->next != NULL) que.push(node->next)
         }
+        return dummy->next;
     }
-    prenode->next=NULL;
-    return pre;
-}
+};
