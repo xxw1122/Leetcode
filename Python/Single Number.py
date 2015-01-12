@@ -1,5 +1,6 @@
+# @iFighting
+
 import functools
-#functional
 
 class Solution:
     # @param A, a list of integer
