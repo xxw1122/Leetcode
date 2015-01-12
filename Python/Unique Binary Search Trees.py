@@ -1,5 +1,6 @@
 class Solution:
     # @return an integer
+    # @iFighting
     def numTrees(self, n):
         dp = []
         dp.append(1);
