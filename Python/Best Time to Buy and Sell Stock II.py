@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 class Solution:
     # @param prices, a list of integer
     # @return an integer
