@@ -1,6 +1,7 @@
 class Solution:
     # @param s, a string
     # @return an integer
+    # @iFighting
     def titleToNumber(self, s):
         d = {}
         for i in range(26):
