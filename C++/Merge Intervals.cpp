@@ -9,7 +9,7 @@ struct Interval {
 
 static bool cmp(Interval x,Interval y){
     if(x.start!=y.start) return x.start<y.start;
-    else return y.end<y.end;
+    else return x.end<y.end;
 }
 
 vector<Interval> merge(vector<Interval> &intervals) {
