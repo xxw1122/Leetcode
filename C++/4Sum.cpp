@@ -1,57 +1,39 @@
-#include <iostream>
-#include <vector>
-#include <algorithm>
-#include <unordered_map>
+class Solution {
+public:
+    vector<vector<int> > fourSum(vector<int> &num, int target) {
+        int n = num.size();
+        vector<vector<int> > res;
+        sort(num.begin(), num.end());
+        for(int i = 0; i < n-3; i++)
+        {
+            if(i > 0 && num[i] == num[i-1])continue;//防止第一个元素重复
+            for(int j = i+1; j < n-2; j++)
+            {
+                if(j > i+1 && num[j] == num[j-1])continue;//防止第二个元素重复
+                int target2 = target - num[i] - num[j];
+                int head = j+1, tail = n-1;
+                while(head < tail)
+                {
+                    int tmp = num[head] + num[tail];
+                    if(tmp > target2)
+                        tail--;
+                    else if(tmp < target2)
+                        head++;
+                    else
+                    {
+                        res.push_back(vector<int>{num[i], num[j], num[head], num[tail]});
+                        //为了防止出现重复的二元组，使结果等于target2
+                        int k = head+1;
+                        while(k < tail && num[k] == num[head])k++;
+                        head = k;
 
-using namespace std;
-
-vector<vector<int> > fourSum(vector<int>&num,int target){
-  unordered_map<int,vector<pair<int,int> > >st;
-  sort(num.begin(),num.end());
-  int len=num.size();
-  unordered_map<int,vector<pair<int,int> > >::iterator it;
-  vector<vector<int> >::iterator it1;
-  for(int i=0;i<len;i++){
-    for(int j=i+1;j<len;j++){
-      int cnt=num[i]+num[j];
-      if(st.count(cnt)==0){
-        vector<pair<int,int> > cur;
-        cur.push_back(make_pair(i,j));
-        st.insert(make_pair(cnt,cur));
-      }
-      else{
-        vector<pair<int,int> >cur;
-        it=st.find(cnt);
-        for(int k=0;k<((*it).second).size();k++)
-          cur.push_back(((*it).second)[k]);
-        cur.push_back(make_pair(i,j));
-        st.erase(it);
-        st.insert(make_pair(cnt,cur));
-      }
-    }
-  }
-  vector<vector<int> >vec;
-  for(int i=0;i<len;i++){
-    for(int j=i+1;j<len;j++){
-      int cnt=target-num[i]-num[j];
-      if(st.count(cnt)>0){
-        for(int k=0;k<st[cnt].size();k++){
-          vector<int> vec1;
-          int x=st[cnt][k].first,y=st[cnt][k].second;
-          if(x!=i&&y!=j&&x!=j&&y!=i){
-            vec1.push_back(num[i]);
-            vec1.push_back(num[j]);
-            vec1.push_back(num[x]);
-            vec1.push_back(num[y]);
-            sort(vec1.begin(),vec1.end());
-            vec.push_back(vec1);
-          }
+                        k = tail-1;
+                        while(k > head && num[k] == num[tail])k--;
+                        tail = k;
+                    }
+                }
+            }
         }
-      }
+        return res;
     }
-  }
-  sort(vec.begin(),vec.end());
-  it1=unique(vec.begin(),vec.end());
-  vector<vector<int> >vec1(vec.begin(),it1);
-  return vec1;
-}
+};
