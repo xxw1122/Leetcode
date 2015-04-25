@@ -2,7 +2,7 @@
 
 class Solution {
 public:
-    int search(int A[], int n, int target) {
+    bool search(int A[], int n, int target) {
         int left = 0, right = n - 1, mid;
         while(left <= right){
             mid = (left + right) / 2;
