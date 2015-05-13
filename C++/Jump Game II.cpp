@@ -1,16 +1,21 @@
-#include <iostream>
+#include <vector>
 
-using namespace std;
-
-int jump(int A[], int n) {
-    int max = 0;
-    int f[n];
-    memset(f, 0, sizeof(int) * n);
-    for (int i = 0; i < n; i++) {
-        for (int j = max - i + 1; j <= A[i] && i + j < n; j++) {
-            f[i + j] = f[i] + 1;
+class Solution {
+public:
+    /**
+     * @param A: A list of lists of integers
+     * @return: An integer
+     */
+    int jump(vector<int> A) {
+        // wirte your code here
+        int ret = 0, last = 0, curr = 0;
+        for (int i = 0; i < A.size(); i ++) {
+            if (i > last) {
+                last = curr;
+                ret ++;
+            }
+            curr = max(curr, i + A[i]);
         }
-        max = max > A[i] + i ? max : A[i] + i;
+        return ret;
     }
-    return f[n - 1];
-}
+};
