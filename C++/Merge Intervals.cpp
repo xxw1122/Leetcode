@@ -1,33 +1,41 @@
 #include <vector>
+#include <algorithm>
 
-struct Interval {
-    int start;
-    int end;
-    Interval() : start(0), end(0) {}
-    Interval(int s, int e) : start(s), end(e) {}
+/**
+ * Definition of Interval:
+ */
+classs Interval {
+    int start, end;
+    Interval(int start, int end) {
+        this->start = start;
+        this->end = end;
+    }
 };
 
-static bool cmp(Interval x,Interval y){
-    if(x.start!=y.start) return x.start<y.start;
-    else return x.end<y.end;
-}
-
-vector<Interval> merge(vector<Interval> &intervals) {
-    vector<Interval> vec;
-    if(intervals.size()==0) return vec;
-    sort(intervals.begin(),intervals.end(),cmp);
-    Interval cur,cnt=intervals[0];
-    for(int i=1;i<intervals.size();i++){
-        if(cnt.end>=intervals[i].start){
-            cur.start=min(cnt.start,intervals[i].start);
-            cur.end=max(cnt.end,intervals[i].end);
-            cnt=cur;
-        }
-        else{
-            vec.push_back(cnt);
-            cnt=intervals[i];
-        }
+class Solution {
+public:
+    /**
+     * @param intervals: interval list.
+     * @return: A new interval list.
+     */
+    static bool cmp(Interval x, Interval y) {
+        return x.start < y.start;
     }
-    vec.push_back(cnt);
-    return vec;
-}
+    vector<Interval> merge(vector<Interval> &intervals) {
+        // write your code here
+        sort(intervals.begin(), intervals.end(), cmp);
+        vector<Interval> res;
+        if (intervals.empty()) return res;
+        Interval pre = intervals[0];
+        for (int i = 1; i < intervals.size(); i ++) {
+            if (intervals[i].start > pre.end) {
+                res.push_back(pre);
+                pre = intervals[i];
+            } else {
+                pre.end = max(pre.end, intervals[i].end);
+            }
+        }
+        res.push_back(pre);
+        return res;
+    }
+};
