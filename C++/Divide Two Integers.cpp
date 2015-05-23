@@ -1,37 +1,29 @@
-#include <iostream>
-
-using namespace std;
-
-int divide(int dividend, int divisor) {
-    int tag=0;
-    long long cnt=dividend,cur=divisor;
-    if(cnt<0&&cur<0){
-        cnt=-cnt;
-        cur=-cur;
-    }
-    else if(cnt<0&&cur>0){
-        cnt=-cnt;
-        tag=1;
-    }
-    else if(cnt>0&&cur<0){
-        cur=-cur;
-        tag=1;
-    }
-    if(cnt<cur) return 0;
-    long long cnt1=cnt,cur1=cur;
-    int num1=0,num2=1;
-    while(cnt>=cur){
-        if(cnt>=(cur<<1)){
-            cur=cur<<1;
-            num2=num2<<1;
+class Solution {
+public:
+    /**
+     * @param dividend the dividend
+     * @param divisor the divisor
+     * @return the result
+     */
+    int divide(int dividend, int divisor) {
+        // Write your code here
+        int symbol = 1;
+        long long dvd = dividend, dvr = divisor, res = 0;
+        if (!((dividend >= 0 && divisor >= 0) ||
+                (dividend < 0 && divisor < 0))) symbol = -1;
+        if (dvd < 0) dvd = -dvd;
+        if (dvr <  0) dvr = -dvr;
+        while (dvd >= dvr) {
+            long long cnt = dvr, num = 1;
+            while ((cnt << 1) <= dvd) {
+                cnt = cnt << 1;
+                num = num << 1;
+            }
+            dvd -= cnt;
+            res += num;
         }
-        else{
-            cnt=cnt-cur;
-            cur=cur1;
-            num1=num1+num2;
-            num2=1;
-        }
+        res = res * symbol;
+        if (res > INT_MAX || res < INT_MIN) return INT_MAX;
+        return res;
     }
-    if(tag) return -num1;
-    else return num1;
-}
+};
