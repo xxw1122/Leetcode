@@ -1,37 +1,25 @@
-#include<iostream>
-#include<string>
-#include<vector>
-
-
-void generate(vector<string> &st,string &str,int leftnum,int rightnum,int lenth)
-    {
-        if(leftnum==lenth&&rightnum==lenth)
-            {
-                st.push_back(str);
-                return;
+class Solution {
+public:
+    void helper(vector<string> &res, string str, int x, int y, int n) {
+        if (y == n) {
+            res.push_back(str);
+            return;
+        }
+        if (x == n) {
+            string str1 = str + ")";
+            helper(res, str1, x, y + 1, n);
+        } else {
+            string str1 = str + "(";
+            helper(res, str1, x + 1, y, n);
+            if (x > y) {
+                str1 = str + ")";
+                helper(res, str1, x, y + 1, n);
             }
-        else if(leftnum==lenth)
-            {
-                string str1=str+")";
-                generate(st,str1,leftnum,rightnum+1,lenth);
-            }
-        else if(leftnum<lenth)
-            {
-                if(leftnum>rightnum)
-                    {
-                        string str1=str+")";
-                        generate(st,str1,leftnum,rightnum+1,lenth);
-                    }
-                string str1=str+"(";
-                generate(st,str1,leftnum+1,rightnum,lenth);
-            }
+        }
     }
-
-vector<string> generateParenthesis(int n)
-    {
-        vector<string> vec;
-        if(n==0) return vec;
-        string str="(";
-        generate(vec,str,1,0,n);
-        return vec;
+    vector<string> generateParenthesis(int n) {
+        vector<string> res;
+        helper(res, "", 0, 0, n);
+        return res;
     }
+};
