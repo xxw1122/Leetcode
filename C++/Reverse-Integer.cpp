@@ -10,8 +10,8 @@ public:
         std::reverse(s.begin(), s.end());
         int sum = 0;
         for (int i = 0; i < s.size(); i ++) {
-            if (symbol == 1 && ((sum > INT_MAX / 10) || (sum == INT_MAX / 10 &&  s[i] - '0' > 7)) return 0;
-            else if(symbol == -1 && ((sum > INT_MAX / 10) || (sum == INT_MAX / 10 && s[i] - '0' > 8)) return 0;
+            if (symbol == 1 && ((sum > INT_MAX / 10) || (sum == INT_MAX / 10 &&  s[i] - '0' > 7))) return 0;
+            else if(symbol == -1 && ((sum > INT_MAX / 10) || (sum == INT_MAX / 10 && s[i] - '0' > 8))) return 0;
             sum = sum * 10 + s[i] - '0';
         }
         return sum * symbol;
