@@ -1,32 +1,31 @@
 class Solution {
 public:
-    vector<vector<int> > threeSum(vector<int> &num) {
-        vector<vector<int> >vec;
-        sort(num.begin(), num.end());
-        int len = num.size();
-        for(int i = 0; i + 2 < len; i++){
-            if(i == 0 || (i > 0 && num[i] != num[i-1])){
-                int left = i + 1, right = len - 1;
-                while(left < right){
-                    int s = num[i] + num[left] + num[right];
-                    if(s == 0){
-                        vector<int> vec1;
-                        vec1.push_back(num[i]);
-                        vec1.push_back(num[left]);
-                        vec1.push_back(num[right]);
-                        vec.push_back(vec1);
-                        left++;
-                        right--;
-                        while(left < right && num[left] == num[left-1])
-                            left++;
-                        while(left < right && num[right] == num[right+1])
-                            right--;
-                    }
-                    else if(s < 0) left++;
-                    else right--;
-                }
-            }
+    vector<vector<int> > threeSum(vector<int>& nums) {
+        sort(nums.begin(), nums.end());
+        vector<vector<int> > res;
+        int index = 0;
+        while (index + 2 < nums.size()) {
+        	int left = index + 1, right = nums.size() - 1;
+        	while (left < right) {
+        		if (nums[left] + nums[right] == -nums[index]) {
+        			vector<int> cur;
+        			cur.push_back(nums[index]);
+        			cur.push_back(nums[left]);
+        			cur.push_back(nums[right]);
+        			res.push_back(cur);
+        			int leftv = nums[left++], rightv = nums[right--];
+        			while (left < right && nums[left] == leftv) left ++;
+        			while (left < right && nums[right] == rightv) right --;
+        		}
+        		else if (nums[left] + nums[right] > -nums[index]) {
+        			right --;
+        		} else {
+        			left ++;
+        		}
+        	}
+        	int temp = nums[index++];
+        	while (index + 2 < nums.size() && nums[index] == temp) index ++;
         }
-        return vec;
+        return res;
     }
 };
