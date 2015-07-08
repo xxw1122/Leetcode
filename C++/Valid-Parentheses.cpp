@@ -1,42 +1,24 @@
-#include<iostream>
-#include<stack>
-
-bool isValid(string s)
-    {
-        stack<char> st;
-        for(int i=0;i<s.size();i++)
-            {
-                if(s[i]=='(')
-                    {
-                        st.push(s[i]);
-                    }
-                else if(s[i]=='[')
-                    {
-                        st.push(s[i]);
-                    }
-                else if(s[i]=='{')
-                    {
-                        st.push(s[i]);
-                    }
-                else if(s[i]==')')
-                    {
-                        if(st.empty()) return false;
-                        if(st.top()!='(') return false;
-                        st.pop();
-                    }
-                else if(s[i]==']')
-                    {
-                        if(st.empty()) return false;
-                        if(st.top()!='[') return false;
-                        st.pop();
-                    }
-                else if(s[i]=='}')
-                    {
-                        if(st.empty()) return false;
-                        if(st.top()!='{') return false;
-                        st.pop();
-                    }
+class Solution {
+public:
+    bool isValid(string s) {
+        stack<char> stk;
+        for (int i = 0; i < s.size(); i ++) {
+            if (s[i] == '(' || s[i] == '[' || s[i] == '{') {
+                stk.push(s[i]);
+            } else {
+                if (s[i] == ')') {
+                    if (stk.empty() || stk.top() != '(') return false;
+                    else stk.pop();
+                } else if (s[i] == ']') {
+                    if (stk.empty() || stk.top() != '[') return false;
+                    else stk.pop();
+                } else {
+                    if (stk.empty() || stk.top() != '{') return false;
+                    else stk.pop();
+                }
             }
-        if(st.empty()) return true;
+        }
+        if (stk.empty()) return true;
         else return false;
     }
+};
