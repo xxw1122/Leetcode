@@ -1,5 +1,3 @@
-#include <string>
-
 class Solution {
 public:
     /**
@@ -27,10 +25,10 @@ public:
     string countAndSay(int n) {
         // Write your code here
         string str = "1";
-        n -= 1;
-        while (n > 0) {
+        while (n > 1) {
             string st = solve(str);
             str = st;
+            n -= 1;
         }
         return str;
     }
