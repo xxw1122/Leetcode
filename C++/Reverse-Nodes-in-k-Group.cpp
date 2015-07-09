@@ -35,6 +35,6 @@ public:
             }
         }
         cur->next = head;
-        return dummy
+        return dummy->next;
     }
 };
