@@ -1,31 +1,17 @@
-#include<iostream>
-
-void merge(int A[], int m, int B[], int n)
-    {
-        int *arry=new int[m+n];
-        int i=0,j=0,k=0;
-        while(i<m&&j<n)
-            {
-                if(A[i]<=B[j])
-                    {
-                        arry[k++]=A[i];
-                        i++;
-                    }
-                else
-                    {
-                        arry[k++]=B[j];
-                        j++;
-                    }
+class Solution {
+public:
+    void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
+        int cur = m + n - 1;
+        m --, n --;
+        while (m >= 0 && n >= 0) {
+            if (nums1[m] >= nums2[n]) {
+                nums1[cur --] = nums1[m --];
+            } else {
+                nums1[cur --] = nums2[n --];
             }
-        while(i==m&&j<n)
-            {
-                arry[k++]=B[j++];
-            }
-        while(j==n&&i<m)
-            {
-                arry[k++]=A[i++];
-            }
-        for(i=0;i<m+n;i++)
-            A[i]=arry[i];
-        delete [] arry;
+        }
+        while (n >= 0) {
+            nums1[cur --] = nums2[n --];
+        }
     }
+};
