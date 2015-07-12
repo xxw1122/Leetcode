@@ -1,22 +1,19 @@
-#include<iostream>
-
-
-int removeDuplicates(int A[], int n)
-    {
-        if(n<=1) return n;
-        int num=1,cnt=A[0],pos=0,res=1;
-        for(int i=1;i<n;i++)
-            {
-                if(A[i]==A[pos]&&num==1)
-                    {
-                        A[++pos]=A[i];
-                        num++;
-                    }
-                else if(A[i]!=A[pos])
-                    {
-                        A[++pos]=A[i];
-                        num=1;
-                    }
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) {
+        int cur = -1, time = 0, index = 0;
+        for (int i = 0; i < nums.size(); i ++) {
+            if (time == 0 || nums[i] != cur) {
+                time = 1;
+                cur = nums[i];
+                nums[index ++] = nums[i];
+            } else if (nums[i] == cur) {
+                time ++;
+                if (time <= 2) {
+                    nums[index ++] = nums[i];
+                }
             }
-        return pos+1;
+        }
+        return index;
     }
+};
