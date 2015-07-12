@@ -1,33 +1,26 @@
-#include <iostream>
-#include <string>
-#include <vector>
-#include <algorithm>
-#include <iterator>
-#include <set>
-#include <map>
-
-using namespace std;
-
-vector<string> anagrams(vector<string> &strs) {
-    vector<string> vec;
-    if(strs.empty()) return vec;
-    multimap<string,string> mp;
-    multimap<string,string>::iterator pos;
-    for(int i=0;i<strs.size();i++){
-        string str1(strs[i]);
-        sort(str1.begin(),str1.end());
-        mp.insert(make_pair(str1, strs[i]));
-    }
-    for(int i=0;i<strs.size();i++){
-        string str1=strs[i];
-        sort(str1.begin(),str1.end());
-        if(mp.count(str1)>=2){
-            while(mp.count(str1)){
-                pos=mp.find(str1);
-                vec.push_back(pos->second);
-                mp.erase(pos);
+class Solution {
+public:
+    vector<string> anagrams(vector<string>& strs) {
+        map<string, vector<string> >hash;
+        for (int i = 0; i < strs.size(); i ++) {
+            string s = strs[i];
+            sort(s.begin(), s.end());
+            if (hash.find(s) != hash.end()) {
+                hash[s].push_back(strs[i]);
+            } else {
+                vector<string> temp;
+                temp.push_back(strs[i]);
+                hash.insert(make_pair(s, temp));
             }
         }
+        vector<string> res;
+        for (auto it = hash.begin(); it != hash.end(); it ++) {
+            if ((*it).second.size() >= 2) {
+                for (int i = 0; i < (*it).second.size(); i ++) {
+                    res.push_back(((*it).second)[i]);
+                }
+            }
+        }
+        return res;
     }
-    return vec;
-}
+};
