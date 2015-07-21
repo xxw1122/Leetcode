@@ -4,7 +4,8 @@
 /**
  * Definition of Interval:
  */
-classs Interval {
+class Interval {
+public:
     int start, end;
     Interval(int start, int end) {
         this->start = start;
