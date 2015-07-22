@@ -1,5 +1,3 @@
-#include <vector>
-
 class Solution {
 public:
     void dfs(int x, int y, vector<vector<char> > &grid) {
