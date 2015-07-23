@@ -1,30 +1,22 @@
-#include <vector>
-
 class Solution {
 public:
-    int findk(vector<int> &nums, int start, int end, int k) {
+    int FindKth(vector<int> &nums, int start, int end, int k) {
         if (start == end) return nums[start];
-        int left = start + 1, right = end;
+        int left = start + 1, right = end, cur = nums[start];
         while (left <= right) {
-            while (nums[left] < nums[start] && left <= right) {
-                left ++;
-            }
-            while (nums[right] >= nums[start] && left <= right) {
-                right --;
-            }
+            while (left <= right && nums[left] < cur) left ++;
+            while (left <= right && nums[right] >= cur) right --;
             if (left < right) {
                 swap(nums[left], nums[right]);
-                left ++;
-                right --;
             }
         }
-        swap(nums[right], nums[start]);
+        swap(nums[start], nums[right]);
         if (right - start + 1 == k) return nums[right];
-        else if (right - start + 1 < k) return findk(nums, right + 1, end, k - (right - start + 1));
-        else return findk(nums, start, right - 1, k);
+        else if (right - start + 1 > k) return FindKth(nums, start, right - 1, k);
+        else return FindKth(nums, right + 1, end, k - (right - start + 1));
     }
     int findKthLargest(vector<int>& nums, int k) {
         int len = nums.size();
-        return findk(nums, 0, len - 1, len - k + 1);
+        return FindKth(nums, 0, len - 1, len - k + 1);
     }
 };
