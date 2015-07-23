@@ -1,5 +1,3 @@
-#include <string>
-
 class WordDictionary {
 public:
     class TrieNode {
