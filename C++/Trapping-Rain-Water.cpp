@@ -1,18 +1,23 @@
 class Solution {
 public:
-    int trap(int A[], int n) {
-        int *leftmaxhigh = new int[n];
-        int leftmax = 0;
-        for(int i = 0; i < n; i++){
-            if(A[i] > leftmax) leftmax = A[i];
-            leftmaxhigh[i] = leftmax;
+    int trap(vector<int>& height) {
+        if (height.empty()) return 0;
+        int maxh = -1, maxp = -1;
+        for (int i = 0; i < height.size(); i ++) {
+            if (height[i] > maxh) {
+                maxh = height[i];
+                maxp = i;
+            }
         }
-        int rightmax = 0, sum = 0;
-        for(int i = n - 1; i >= 0; i--){
-            if(A[i] < rightmax) rightmax = A[i];
-            if(min(rightmax, leftmaxhigh[i]) > A[i])
-                sum += min(rightmax, leftmaxhigh[i]) - A[i];
+        int leftm = height[0], rightm = height[height.size() - 1], res = 0;
+        for (int i = 1; i < maxp; i ++) {
+            if (height[i] < leftm) res += (leftm - height[i]);
+            else leftm = height[i];
         }
-        return sum;
+        for (int i = height.size() - 1; i > maxp; i --) {
+            if (height[i] < rightm) res += (rightm - height[i]);
+            else rightm = height[i];
+        }
+        return res;
     }
 };
