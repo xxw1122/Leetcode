@@ -1,40 +1,31 @@
-#include <vector>
-
-struct Interval {
-    int start;
-    int end;
-    Interval() : start(0), end(0) {}
-    Interval(int s, int e) : start(s), end(e) {}
-};
-
-static bool cmp(Interval x,Interval y){
-    if(x.start!=y.start) return x.start<y.start;
-    else return x.end<y.end;
-}
-
-vector<Interval> insert(vector<Interval> &intervals, Interval newInterval) {
-    sort(intervals.begin(),intervals.end(),cmp);
-    vector<Interval> vec;
-    int tag=0;
-    for(int i=0;i<intervals.size();i++){
-        if(tag==0){
-            if(intervals[i].end<newInterval.start){
-                vec.push_back(intervals[i]);
-            }
-            else if(intervals[i].start>newInterval.end){
-                vec.push_back(newInterval);
-                vec.push_back(intervals[i]);
-                tag=1;
-            }
-            else{
-                newInterval.start=min(intervals[i].start,newInterval.start);
-                newInterval.end=max(intervals[i].end,newInterval.end);
+/**
+ * Definition for an interval.
+ * struct Interval {
+ *     int start;
+ *     int end;
+ *     Interval() : start(0), end(0) {}
+ *     Interval(int s, int e) : start(s), end(e) {}
+ * };
+ */
+class Solution {
+public:
+    vector<Interval> insert(vector<Interval>& intervals, Interval newInterval) {
+        vector<Interval> res;
+        int cur = 0;
+        for (; cur < intervals.size(); cur ++) {
+            if (intervals[cur].start > newInterval.end) {
+                break;
+            } else if (intervals[cur].end < newInterval.start) {
+                res.push_back(intervals[cur]);
+            } else {
+                newInterval.start = min(newInterval.start, intervals[cur].start);
+                newInterval.end = max(newInterval.end, intervals[cur].end);
             }
         }
-        else{
-            vec.push_back(intervals[i]);
+        res.push_back(newInterval);
+        for (; cur < intervals.size(); cur ++) {
+            res.push_back(intervals[cur]);
         }
+        return res;
     }
-    if(tag==0) vec.push_back(newInterval);
-    return vec;
-}
+};
