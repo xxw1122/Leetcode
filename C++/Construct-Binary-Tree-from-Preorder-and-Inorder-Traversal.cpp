@@ -1,51 +1,34 @@
-#include <iostream>
-#include <vector>
-
-using namespace std;
-
-struct TreeNode {
-    int val;
-    TreeNode *left;
-    TreeNode *right;
-    TreeNode(int x) : val(x), left(NULL), right(NULL) {}
-};
-
-TreeNode *makeTree(vector<int>&preorder,int pos1,int pos2,vector<int>&inorder,int pos3,int pos4){
-    if(pos1>pos2) return NULL;
-    TreeNode *root=new TreeNode(sizeof(TreeNode));
-    if(pos1==pos2){
-        root->val=preorder[pos1];
-        root->left=NULL;
-        root->right=NULL;
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* helper(vector<int>& inorder, vector<int>& postorder, int l1, int r1, int l2, int r2) {
+        if (l1 > r1) return NULL;
+        if (l1 == r1) {
+            TreeNode* root = new TreeNode(inorder[l1]);
+            return root;
+        }
+        int pos = 0;
+        for (int i = l1; i <= r1; i ++) {
+            if (inorder[i] == postorder[r2]) {
+                pos = i;
+                break;
+            }
+        }
+        TreeNode* root = new TreeNode(postorder[r2]);
+        root->left = helper(inorder, postorder, l1, pos - 1, l2, l2 + pos - l1  - 1);
+        root->right = helper(inorder, postorder, pos + 1, r1, l2 + pos - l1, r2 - 1);
         return root;
     }
-    int cnt;
-    for(int i=pos3;i<=pos4;i++){
-        if(inorder[i]==preorder[pos1]){
-            cnt=i;
-            break;
-        }
+    TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
+        int len = inorder.size();
+        return helper(inorder, postorder, 0, len - 1, 0, len - 1);
     }
-    root->val=inorder[cnt];
-    root->left=makeTree(preorder,pos1+1,pos1+cnt-pos3,inorder,pos3,cnt-1);
-    root->right=makeTree(preorder,pos1+cnt-pos3+1,pos2,inorder,cnt+1,pos4);
-    return root;
-}
-
-TreeNode *buildTree(vector<int> &preorder, vector<int> &inorder) {
-    int len1=inorder.size(),len2=postorder.size();
-    if(len1==0) return NULL;
-    int pos;
-    for(int i=0;i<len1;i++){
-        if(inorder[i]==preorder[0]){
-            pos=i;
-            break;
-        }
-    }
-    TreeNode *root=new TreeNode(sizeof(TreeNode));
-    root->val=inorder[pos];
-    root->left=makeTree(preorder,1,pos,inorder,0,pos-1);
-    root->right=makeTree(preorder, pos+1, len1-1, inorder, pos+1, len1-1);
-    return root;
-}
-
+};
