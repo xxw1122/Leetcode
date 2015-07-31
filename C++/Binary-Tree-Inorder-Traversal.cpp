@@ -1,34 +1,24 @@
-#include<iostream>
-#include<vector>
-#include<stack>
-
-using namespace std;
-
-struct TreeNode {
-    int val;
-    TreeNode *left;
-    TreeNode *right;
-    TreeNode(int x) : val(x), left(NULL), right(NULL) {}
-};
-
-vector<int> inorderTraversal(TreeNode *root)
-    {
-        vector<int> vec;
-        stack<TreeNode*> st;
-        while(root||!st.empty())
-            {
-                if(root!=NULL)
-                    {
-                        st.push(root);
-                        root=root->left;
-                    }
-                else
-                    {
-                        root=st.top();
-                        vec.push_back(root->val);
-                        st.pop();
-                        root=root->right;
-                    }
-            }
-        return vec;
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */ 
+class Solution {
+public:
+    //recursion
+    void helper(TreeNode* root, vector<int> &res) {
+        if (root == NULL) return;
+        helper(root->left);
+        res.push_back(root->val);
+        helper(root->right);
     }
+    vector<int> inorderTraversal(TreeNode* root) {
+        vector<int> res;
+        helper(root, res);
+        return res;
+    }
+};

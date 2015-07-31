@@ -1,27 +1,40 @@
-#include<iostream>
-
-
-using namespace std;
-
-struct TreeLinkNode {
-    int val;
-    TreeLinkNode *left, *right, *next;
-    TreeLinkNode(int x) : val(x), left(NULL), right(NULL), next(NULL) {}
+/**
+ * Definition for binary tree with next pointer.
+ * struct TreeLinkNode {
+ *  int val;
+ *  TreeLinkNode *left, *right, *next;
+ *  TreeLinkNode(int x) : val(x), left(NULL), right(NULL), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    void connect(TreeLinkNode *root) {
+    	if (root == NULL || root->left == NULL) return;
+    	root->left->next = root->right;
+    	if (root->next != NULL) root->right->next = root->next->left;
+    	else root->right->next = NULL;
+    	connect(root->left);
+    	connect(root->right);
+    }
 };
 
-void connectTree(TreeLinkNode *root,TreeLinkNode *lchild,TreeLinkNode *rchild)
-    {
-        if(lchild==NULL||rchild==NULL) return;
-        lchild->next=rchild;
-        if(root->next!=NULL) rchild->next=(root->next)->left;
-        else rchild->next=NULL;
-        connectTree(lchild, lchild->left, lchild->right);
-        connectTree(rchild, rchild->left, rchild->right);
+class Solution {
+public:
+    void connect(TreeLinkNode *root) {
+    	if (root == NULL) return;
+    	queue<TreeLinkNode*> q;
+    	q.push(root);
+    	while (!q.empty()) {
+    		int size = q.size();
+    		TreeLinkNode* prev = NULL;
+    		for (int i = 0; i < size; i ++) {
+    			TreeLinkNode* cur = q.front();
+	    		q.pop();
+	    		cur->next = prev;
+	    		prev = cur;
+	    		if (cur->right != NULL) q.push(cur->right);
+	    		if (cur->left != NULL) q.push(cur->left);
+    		}
+    	}
     }
-
-
-void connect(TreeLinkNode *root)
-    {
-        if(root==NULL) return;
-        connectTree(root, root->left, root->right);
-    }
+};
