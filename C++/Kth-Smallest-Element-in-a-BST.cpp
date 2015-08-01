@@ -9,19 +9,18 @@
  */
 class Solution {
 public:
-	void findKth(TreeNode *root, int k, int &cur, int &res) {
-		if (root == NULL) return; 
-		findKth(root->left, k, cur, res);
-		if (k == cur) {
+	void helper(TreeNode* root, int& pos, int k, int& res) {
+		if (root == NULL) return;
+		helper(root->left, pos, k, res);
+		if (pos == k) {
 			res = root->val;
-			//return;
 		}
-		cur ++;
-		findKth(root->right, k, cur, res);
+		pos ++;
+		helper(root->right, pos, k, res);
 	}
     int kthSmallest(TreeNode* root, int k) {
-        int res = -1, cur = 1;
-        findKth(root, k, cur, res);
-        return res;
+       int res = -1, start = 1; 
+       helper(root, start, k, res);
+       return res;
     }
 };

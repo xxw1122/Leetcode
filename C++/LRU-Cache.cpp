@@ -1,88 +1,66 @@
-#include <map>
-
 class LRUCache{
 public:
-    class ListNode {
-    public:
-        int val;
-        ListNode *next, *prev;
-        ListNode(int val) {
-            this->val = val;
-            this->next = NULL;
-            this->prev = NULL;
-        }
+    struct ListNode {
+        int key, val;
+        ListNode *prev;
+        ListNode *next;
+        ListNode(int k, int v) : key(k), val(v), prev(NULL), next(NULL) {}
     };
-    map<int, int> hash1;
-    map<int, ListNode*> hash2;
-    int cap, cur;
-    ListNode *head, *tail;
-    // @param capacity, an integer
+    int size, cap;
+    ListNode *head;
+    ListNode *tail;
+    map<int, ListNode*> hash;
     LRUCache(int capacity) {
-        // write your code here
+        size = 0;
         cap = capacity;
-        cur = 0;
-        head = new ListNode(-1);
-        tail = new ListNode(-1);
+        head = new ListNode(0, 0);
+        tail = new ListNode(0, 0);
         head->next = tail;
         tail->prev = head;
     }
-    void move(ListNode *cnt) {
-        ListNode *cnt_next = cnt->next, *cnt_prev = cnt->prev;
-        cnt_prev->next = cnt_next;
-        cnt_next->prev = cnt_prev;
-        ListNode *head_next = head->next;
-        head->next = cnt;
-        cnt->prev = head;
-        cnt->next = head_next;
-        head_next->prev = cnt;
-    }
-    void add(ListNode *cnt) {
-        ListNode *head_next = head->next;
-        head->next = cnt;
-        cnt->prev = head;
-        cnt->next = head_next;
-        head_next->prev = cnt;
-    }
-    void solve(int key, int value) {
-        int k = tail->prev->val;
-        hash1.erase(k);
-        hash2.erase(k);
-        hash1.insert(make_pair(key, value));
-        ListNode *p = tail->prev;
-        p->val = key;
-        move(p);
-        hash2.insert(make_pair(key, p));
-    }
-    // @return an integer
-    int get(int key) {
-        // write your code here
-        if (hash1.find(key) == hash1.end()) {
-            return -1;
-        } else {
-            ListNode *res = hash2[key];
-            move(res);
-            return hash1[key];
-        }
+    
+    void modify(ListNode *cur) {
+        ListNode *prev_tail = tail->prev;
+        prev_tail->next = cur;
+        cur->prev = prev_tail;
+        cur->next = tail;
+        tail->prev = cur;
     }
 
-    // @param key, an integer
-    // @param value, an integer
-    // @return nothing
+    void delete_node(ListNode* cur) {
+        ListNode *prev_cur = cur->prev;
+        ListNode *next_cur = cur->next;
+        prev_cur->next = next_cur;
+        next_cur->prev = prev_cur;
+    }
+
+    int get(int key) {
+        if (hash.find(key) == hash.end()) return -1;
+        ListNode *temp = hash[key];
+        delete_node(temp);
+        modify(temp);
+        return temp->val;
+    }
+
     void set(int key, int value) {
-        // write your code here
-        if (hash1.find(key) != hash1.end()) {
-            hash1[key] = value;
-            get(key);
+        if (hash.find(key) != hash.end()) {
+            ListNode *temp = hash[key];
+            temp->val = value;
+            delete_node(temp);
+            modify(temp);
         } else {
-            if (cur < cap) {
-                ListNode *cnt = new ListNode(key);
-                hash1.insert(make_pair(key, value));
-                hash2.insert(make_pair(key, cnt));
-                add(cnt);
-                cur ++;
+            ListNode *cnt = new ListNode(key, value);
+            hash.insert(make_pair(key, cnt));
+            if (size == cap) {
+                int dk = head->next->key;
+                hash.erase(dk);
+                delete_node(head->next);
+                modify(cnt);
             } else {
-                solve(key, value);
+                size ++;
+                modify(cnt);
             }
         }
     }
 };
+
