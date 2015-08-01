@@ -1,45 +1,44 @@
-#include <iotream>
-
-struct ListNode {
-    int val;
-    ListNode *next;
-    ListNode(int x) : val(x), next(NULL) {}
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* reverse(ListNode* head) {
+        ListNode* res = NULL;
+        while (head != NULL) {
+            ListNode* temp = head->next;
+            head->next = res;
+            res = head;
+            head = temp;
+        }
+        return res;
+    }
+    ListNode* reverseBetween(ListNode* head, int m, int n) {
+        if (m == n) return head;
+        ListNode *pre = new ListNode(0), *cur = pre;
+        pre->next = head;
+        for (int i = 1; i < m; i ++) {
+            cur = cur->next;
+        }
+        ListNode* pre_start = cur;
+        for (int i = 0; i < n - m; i ++) {
+            cur = cur->next;
+        }
+        ListNode *pre_end = cur, *start = pre_start->next;
+        ListNode* next_end = cur->next->next;
+        cur->next->next = NULL;
+        ListNode *new_start = reverse(start);
+        pre_start->next = new_start;
+        cur = pre;
+        while (cur->next != NULL) {
+            cur = cur->next;
+        }
+        cur->next = next_end;
+        return pre->next;
+    }
 };
-
-ListNode *reverseBetween(ListNode *head, int m, int n) {
-    if(m==n) return head;
-    ListNode *prenode1=head,*prenode2=head;
-    ListNode *node1,*node2;
-    for(int i=1;i<m-1;i++)
-        prenode1=prenode1->next;
-    for(int i=1;i<n-1;i++)
-        prenode2=prenode2->next;
-    if(m>1) node1=prenode1->next;
-    else node1=head;
-    if(n>1) node2=prenode2->next;
-    else node2=head;
-    ListNode *cnt=head;
-    ListNode *cur=head;
-    ListNode *last=node2->next;
-    ListNode *end=node2->next;
-    if(m==1){
-        while(cur!=end){
-            cnt=cur;
-            cur=cnt->next;
-            cnt->next=last;
-            last=cnt;
-        }
-        return node2;
-    }
-    else{
-        cur=node1;
-        while(cur!=end){
-            cnt=cur;
-            cur=cnt->next;
-            cnt->next=last;
-            last=cnt;
-        }
-        prenode1->next=last;
-        return head;
-    }
-}
