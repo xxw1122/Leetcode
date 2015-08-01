@@ -1,38 +1,51 @@
-#include <deque>
-
-struct ListNode {
-    int val;
-    ListNode *next;
-    ListNode(int x) : val(x), next(NULL) {}
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* getMid(ListNode* head) {
+        if (head == NULL) return head;
+        ListNode *slow = head, *fast = head->next;
+        while (fast != NULL && fast->next != NULL) {
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+        return slow;
+    }
+    ListNode* reverse(ListNode *head) {
+        ListNode *cur = NULL;
+        while (head != NULL) {
+            ListNode *temp = head->next;
+            head->next = cur;
+            cur = head;
+            head = temp;
+        }
+        return cur;
+    }
+    void reorderList(ListNode* head) {
+        if (head == NULL || head->next == NULL) return;
+        ListNode *mid = getMid(head);        
+        ListNode *start = mid->next;
+        mid->next = NULL;
+        ListNode *n_start = reverse(start);
+        ListNode *pre = new ListNode(0), *cur = pre;
+        while (head != NULL || n_start != NULL) {
+            if (head != NULL) {
+                cur->next = head;
+                cur = cur->next;
+                head = head->next;
+            }
+            if (n_start != NULL) {
+                cur->next = n_start;
+                n_start = n_start->next;
+                cur = cur->next;
+            }
+        }
+        cur->next = NULL;
+    }
 };
-
-
-void reorderList(ListNode *head) {
-    if(head==NULL||head->next==NULL) return;
-    ListNode *node=head;
-    deque<ListNode*>st;
-    node=node->next;
-    while(node!=NULL){
-        st.push_back(node);
-        node=node->next;
-    }
-    ListNode* prenode=head;
-    while(st.size()>=2){
-        prenode->next=st.back();
-        st.pop_back();
-        prenode=prenode->next;
-        prenode->next=st.front();
-        st.pop_front();
-        prenode=prenode->next;
-    }
-    if(st.size()==1){
-        prenode->next=st.back();
-        st.pop_back();
-        prenode=prenode->next;
-        prenode->next=NULL;
-    }
-    else{
-        prenode->next=NULL;
-    }
-    return;
-}

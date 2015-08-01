@@ -1,46 +1,27 @@
-#include<iostream>
-
-
-using namespace std;
-
-struct ListNode {
-    int val;
-    ListNode *next;
-    ListNode(int x) : val(x), next(NULL) {}
-};
-
-ListNode *insertionSortList(ListNode *head)
-{
-    if(head==NULL) return NULL;
-    ListNode *cntnode=NULL,*prenode=NULL,*nextnode=NULL,*node=NULL;
-    cntnode=head->next;
-    head->next=NULL;
-    while(cntnode)
-        {
-            node=cntnode->next;
-            if(cntnode->val<head->val)
-                {
-                    cntnode->next=head;
-                    head=cntnode;
-                }
-            else
-                {
-                    prenode=head;
-                    nextnode=head->next;
-                    while(nextnode&&(nextnode->val)<cntnode->val)
-                        {
-                            prenode=pre->next;
-                            nextnode=nextnode->next;
-                        }
-                    prenode->next=cntnode;
-                    cntnode->next=nextnode;
-                }
-            cntnode=node;
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* insertionSortList(ListNode* head) {
+        if (head == NULL || head->next == NULL) return head;
+        ListNode *pre = new ListNode(0);
+        while (head != NULL) {
+            ListNode *temp = head->next;
+            ListNode *p = pre;
+            while (p->next != NULL && p->next->val < head->val) {
+                p = p->next;
+            }
+            ListNode *cnt = p->next;
+            p->next = head;
+            head->next = cnt;
+            head = temp;
         }
-    return head;
-}
-
-int main()
-    {
-        return 0;
+        return pre->next;
     }
+};
