@@ -1,6 +1,3 @@
-#include <vector>
-#include <set>
-
 class Solution {
 public:
     bool containsNearbyDuplicate(vector<int>& nums, int k) {
@@ -12,7 +9,7 @@ public:
             hash.insert(nums[i]);
         }
         for (int i = k + 1; i < nums.size(); i ++) {
-            hash.erase(nums[i-k-1]);
+            hash.erase(nums[i - k - 1]);
             if (hash.find(nums[i]) != hash.end()) return true;
             hash.insert(nums[i]);
         }

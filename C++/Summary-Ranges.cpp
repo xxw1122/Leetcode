@@ -1,32 +1,31 @@
 class Solution {
 public:
+    string convert(int start, int end) {
+        string str = to_string(start);
+        str += "->";
+        str += to_string(end);
+        return str;
+    }
     vector<string> summaryRanges(vector<int>& nums) {
         vector<string> res;
         if (nums.empty()) return res;
-        int cur = nums[0], len = 1;
+        int start = nums[0], end = nums[0];
         for (int i = 1; i < nums.size(); i ++) {
-        	if (nums[i] == nums[i - 1] + 1) {
-        		len ++;
-        	} else {
-        		if (len == 1) {
-        			res.push_back(to_string(cur));
-        		} else {
-        			string str = to_string(cur);
-        			str += "->";
-        			str += to_string(nums[i - 1]);
-        			res.push_back(str);
-        		}
-        		len = 1;
-        		cur = nums[i];
-        	}
+            if (nums[i] == end + 1) {
+                end ++;
+            } else {
+                if (end - start >= 1) {
+                    res.push_back(convert(start, end));
+                } else {
+                    res.push_back(to_string(end));
+                }
+                start = end = nums[i];
+            }
         }
-        if (len == 1) {
-        	res.push_back(to_string(cur));
-        } else {
-        	string str = to_string(cur);
-        	str += "->";
-        	str += to_string(nums.back());
-        	res.push_back(str);
+        if (end - start >= 1) {                    
+            res.push_back(convert(start, end));            
+        } else {                    
+            res.push_back(to_string(end));                
         }
         return res;
     }
