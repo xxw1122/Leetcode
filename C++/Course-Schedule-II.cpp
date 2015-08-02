@@ -1,5 +1,43 @@
-#include <vector>
-#include <algorithm>
+class Solution {
+public:
+    vector<int> findOrder(int numCourses, vector<pair<int, int>>& prerequisites) {
+        vector<vector<int> > graph(numCourses);
+        map<int, int> hash;
+        for (int i = 0; i < prerequisites.size(); i ++) {
+            int x = prerequisites[i].first, y = prerequisites[i].second;
+            graph[y].push_back(x);
+            if (hash.find(x) != hash.end()) {
+                hash[x]++;
+            } else {
+                hash.insert(make_pair(x, 1));
+            }
+        }
+        queue<int> q;
+        vector<int> res;
+        for (int i = 0; i < numCourses; i ++) {
+            if (hash.find(i) == hash.end()) q.push(i);
+        }
+        while (!q.empty()) {
+            int cnt = q.front();
+            res.push_back(cnt);
+            q.pop();
+            for (int i = 0; i < graph[cnt].size(); i ++) {
+                int temp = graph[cnt][i];
+                if (hash.find(temp) != hash.end()) {
+                    hash[temp] --;
+                    if (hash[temp] == 0) {
+                        q.push(temp);
+                    }
+                }
+            }
+        }
+        if (res.size() == numCourses) return res;
+        else {
+            res.clear();
+            return res;
+        }
+    }
+};
 
 class Solution {
 public:
