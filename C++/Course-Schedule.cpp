@@ -1,5 +1,3 @@
-#include <vector>
-
 class Solution {
 public:
     bool dfs_circle(vector<vector<int> >&graph, vector<int> &vis, int pos) {

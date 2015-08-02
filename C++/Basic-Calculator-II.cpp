@@ -1,6 +1,3 @@
-#include <string>
-#include <stack>
-
 class Solution {
 public:
     int Opcal(char Op, int x, int y) {
