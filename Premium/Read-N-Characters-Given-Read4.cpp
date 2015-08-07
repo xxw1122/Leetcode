@@ -9,6 +9,15 @@ public:
      * @return    The number of characters read
      */
     int read(char *buf, int n) {
-        
+        if (buf == NULL) return 0;
+        int t = 0;
+        for (int i = 0; i <= n / 4; i ++) {
+        	t += read4(buf + i * 4);
+        }
+        if (n > t) {
+        	buf[t] = NULL;
+        	return t;
+        }
+        return n;
     }
 };

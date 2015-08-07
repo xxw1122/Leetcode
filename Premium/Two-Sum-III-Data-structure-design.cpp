@@ -1,28 +1,18 @@
 class TwoSum {
+    unordered_map<int,int> map;
 public:
-	unordered_map<int, int> hash;
-	vector<int> nums;
-	void add(int number) {
-	    nums.push_back(number);
-	    if (hash.find(number) != hash.end()) {
-	    	hash[number] ++;
-	    } else {
-	    	hash.insert(make_pair(number, 1));
-	    }
-	}
+    void add(int number) {
+        map[number]++;
+    }
 
-	bool find(int value) {
-	    for (int i = 0; i < nums.size(); i ++) {
-	    	if (nums[i] * 2 != value) {
-	    		if (hash.find(value - nums[i]) != hash.end()) {
-	    			return true;
-	    		}
-	    	} else {
-	    		if (hash[nums[i]] >= 2) {
-	    			return true;
-	    		}
-	    	}
-	    }
-	    return false;
-	}
+    bool find(int value) {
+        for (auto it = map.begin(); it != map.end(); it++) {
+            int i = it->first;
+            int j = value - i;
+            if ((i == j && it->second > 1) || (i != j && map.find(j) != map.end())) {
+                return true;
+            }
+        }
+        return false;
+    }
 };
