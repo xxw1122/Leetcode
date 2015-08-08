@@ -1,13 +1,32 @@
 /**
  * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
  */
-struct TreeNode {
-    int val;
-    TreeNode *left;
-    TreeNode *right;
-    TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+class Solution {
+public:
+    int getheight(TreeNode* root) {
+        int res = 0;
+        while (root != NULL) {
+            root = root->left;
+            res ++;
+        }
+        return res;
+    }
+    int countNodes(TreeNode* root) {
+        if (root == NULL) return 0;
+        int leftH = getheight(root->left), rightH = getheight(root->right);
+        if (leftH == rightH) {
+            return pow(2, leftH) + countNodes(root->right);
+        }
+        return pow(2, rightH) + countNodes(root->left);
+    }
 };
-
+// my solution not so good
 class Solution {
 public:
     int getheight(TreeNode* root) {

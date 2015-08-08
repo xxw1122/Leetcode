@@ -1,44 +1,31 @@
-#include <string>
-#include <vector>
-
-int str2int(const string&str,int left,int right){
-    int sum=0;
-    for(int i=left;i<=right;i++){
-        sum=sum*10+str[i]-'0';
-    }
-    return sum;
-}
-
-void gernerate(vector<string>&vec,const string &str,string st,int pos,int now,int num){
-    if(pos>=str.size()||now>=str.size()) return;
-    if(num==3&&pos<str.size()){
-        if(pos<str.size()-1&&str[pos]=='0') return;
-        int cnt=str2int(str,pos,str.size()-1);
-        if(cnt>=0&&cnt<=255){
-            string s=st;
-            for(int i=pos;i<str.size();i++){
-                s=s+str[i];
+class Solution {
+public:
+    void helper(vector<string>& res, vector<string> &cur, string &s, int pos) {
+        if (pos == s.size() && cur.size() == 4) {
+            string str = "";
+            str += cur[0];
+            for (int i = 1; i < 4; i ++) {
+                str += ".";
+                str += cur[i];
             }
-            vec.push_back(s);
+            res.push_back(str);
+            return;
         }
-        return;
-    }
-    int cnt=str2int(str,pos,now);
-    if(cnt>=0&&cnt<=255){
-        string s=st;
-        for(int i=pos;i<=now;i++){
-            s=s+str[i];
+        if (cur.size() == 4 || pos >= s.size()) return;
+        int temp = 0;
+        for (int i = pos; i < s.size(); i ++) {
+            temp = temp * 10 + s[i] - '0';
+            if (temp > 255) break;
+            if (s[pos] == '0' && i > pos) continue;
+            cur.push_back(s.substr(pos, i - pos + 1));
+            helper(res, cur, s, i + 1);
+            cur.pop_back();
         }
-        s=s+'.';
-        gernerate(vec,str,s,now+1,now+1,num+1);
     }
-    if(str[pos]!='0') gernerate(vec,str,st,pos,now+1,num);
-    return;
-}
-
-vector<string> restoreIpAddresses(string s) {
-    vector<string> vec;
-    string str;
-    gernerate(vec,s,str,0,0,0);
-    return vec;
-}
+    vector<string> restoreIpAddresses(string s) {
+        vector<string> res;
+        vector<string> cur;
+        helper(res, cur, s, 0);
+        return res;
+    }
+};
