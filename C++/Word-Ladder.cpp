@@ -1,39 +1,26 @@
-#include <unordered_set>
-#include <queue>
-#include <pair>
-#include <map>
-#include <string>
-
 class Solution {
 public:
-    /**
-      * @param start, a string
-      * @param end, a string
-      * @param dict, a set of string
-      * @return an integer
-      */
-    int ladderLength(string start, string end, unordered_set<string> &dict) {
-        // write your code here
-        if (start == end) return 1;
-        queue<pair<string, int> >que;
-        unordered_set<string> st;
-        que.push(make_pair(start, 1));
-        st.insert(start);
-        if (dict.find(start) != dict.end()) dict.erase(start);
-        while (!que.empty()) {
-            string str = que.front().first, s;
-            int len = que.front().second;
-            if (str == end) return len;
-            len ++;
-            que.pop();
-            for (int i = 0; i < str.size(); i ++) {
+    int ladderLength(string beginWord, string endWord, unordered_set<string>& wordDict) {
+        unordered_map<string, int> hash;
+        if (wordDict.find(beginWord) != wordDict.end()) wordDict.erase(beginWord);
+        if (wordDict.find(endWord) == wordDict.end()) wordDict.insert(endWord);
+        queue<string> q;
+        q.push(beginWord);
+        hash[beginWord] = 1;
+        while (!q.empty()) {
+            string cur = q.front();
+            q.pop();
+            if (cur == endWord) return hash[cur];
+            int dis = hash[cur];
+            for (int i = 0; i < cur.size(); i ++) {
                 for (int j = 0; j < 26; j ++) {
-                    s = str;
-                    s[i] = j + 'a';
-                    if (dict.find(s) != dict.end() && st.find(s) == st.end()) {
-                        st.insert(s);
-                        dict.erase(s);
-                        que.push(make_pair(s, len));
+                    char ch = 'a' + j;
+                    string temp = cur;
+                    temp[i] = ch;
+                    if (temp != cur && wordDict.find(temp) != wordDict.end() && hash.find(temp) == hash.end()) {
+                        hash[temp] = dis + 1;
+                        wordDict.erase(temp);
+                        q.push(temp);
                     }
                 }
             }
