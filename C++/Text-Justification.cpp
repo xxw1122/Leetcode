@@ -1,58 +1,50 @@
-#include <string>
-#include <vector>
-
-using namespace std;
-
-string handle_normal(vector<string> &word, int L, int wordL){
-    string str="";
-    int num=word.size();
-    if(num==1){
-        str+=word[0];
-        for(int i=0;i<L-wordL;i++){
-            str+=" ";
+class Solution {
+public:
+    void helper(vector<string>& res, vector<string>& cur, int maxWidth, int temp) {
+        if (cur.empty()) return;
+        if (cur.size() == 1) {
+            string str(maxWidth - cur[0].size(), ' ');
+            res.push_back(cur[0] + str);
+        } else {
+            int spacenum = (maxWidth - temp) / (cur.size() - 1);
+            int leftspace = (maxWidth - temp) % (cur.size() - 1);
+            string str = "";
+            for (int i = 0; i < leftspace; i ++) {
+                str += cur[i];
+                str += string(spacenum + 1, ' ');
+            }
+            for (int i = leftspace; i < cur.size() - 1; i ++) {
+                str += cur[i];
+                str += string(spacenum, ' ');
+            }
+            str += cur.back();
+            res.push_back(str);
         }
-        return str;
     }
-    int mean=(L-wordL)/(num-1);
-    int remain=(L-wordL)%(num-1);
-    str=word[0];
-    for(int i=1;i<word.size();i++){
-        for(int j=0;j<mean;j++)
-            str+=" ";
-        if(remain>0){
-            str+=" ";
-            remain--;
+    vector<string> fullJustify(vector<string>& words, int maxWidth) {
+        vector<string> cur, res;
+        int temp = 0;
+        for (int i = 0; i < words.size(); i ++) {
+            if (cur.empty() || (temp + cur.size() + words[i].size() <= maxWidth)) {
+                cur.push_back(words[i]);
+                temp += words[i].size();
+            } else {
+                helper(res, cur, maxWidth, temp);
+                cur.clear();
+                cur.push_back(words[i]);
+                temp = words[i].size();
+            }
         }
-        str+=word[i];
-    }
-    return str;
-}
-
-string handle_last(vector<string> &word,int L,int count){
-    string str=word[0];
-    for(int i=1;i<word.size();i++){
-        str+=" "+word[i];
-    }
-    for(int i=0;i<L-count;i++)
-        str+=" ";
-    return str;
-}
-
-
-vector<string> fullJustify(vector<string> &words, int L){
-    vector<string> vec,st;
-    int count=-1,lenth=0;
-    for(auto iter=words.begin();iter!=words.end();iter++){
-        if(count+1+(*iter).length()>L){
-            vec.push_back(handle_normal(st, L, lenth));
-            st.clear();
-            count=-1;
-            lenth=0;
+        if (!cur.empty()) {
+            string str = cur[0];
+            for (int i = 1; i < cur.size(); i ++) {
+                str += " ";
+                str += cur[i];
+            }
+            str += string(maxWidth - temp - cur.size() + 1, ' ');
+            res.push_back(str);
         }
-        count+=1+(*iter).length();
-        lenth+=(*iter).length();
-        st.push_back(*iter);
+        return res;
     }
-    vec.push_back(handle_last(st, L, count));
-    return vec;
-}
+};
+
