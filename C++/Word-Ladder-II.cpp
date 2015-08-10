@@ -1,85 +1,77 @@
-class Solution {
-private:
-    int caldis(string x,string y)
-    {
-        int dis = 0;
-        for(int i=0; i<x.length(); i++)
-            if(x[i]!=y[i])
-                dis++;
-        return dis;
+class Node {
+public:
+    int dist;
+    string str;
+    vector<Node*> prev;
+    Node (int dist, string str) {
+        this->dist = dist;
+        this->str = str;
     }
-    void dfs(unordered_map<string,vector<string> > &mp,string cur,vector<string> &now,vector<vector<string> > &ans)
-    {
-        now.push_back(cur);
-        if(mp[cur].size()==0)
-        {
-            vector<string> tmp(now);
-            reverse(tmp.begin(),tmp.end());
-            ans.push_back(tmp);
-            now.pop_back();
+};
+
+class Solution {
+public:
+    /**
+      * @param start, a string
+      * @param end, a string
+      * @param dict, a set of string
+      * @return a list of lists of string
+      */
+    void getPath(vector<vector<string> >& Path, vector<string> &cur, unordered_map<string, Node*>& hash, Node* end) {
+        if (end == NULL) {
+            reverse(cur.begin(), cur.end());
+            Path.push_back(cur);
+            reverse(cur.begin(), cur.end());
             return;
         }
-        for(int i=0; i<mp[cur].size(); i++)
-        {
-            dfs(mp,mp[cur][i],now,ans);
-        }
-        now.pop_back();
-    }
-public:
-    vector<vector<string> > findLadders(string start, string end, unordered_set<string> &dict) {
-        vector<string> now;
-        vector<vector<string> > ans;
-        if(start==end)
-        {
-            now.push_back(end);
-            ans.push_back(now);
-            return ans;
-        }
-        unordered_set<string> qu[2];
-        unordered_map<string,vector<string> > mp;
-        for(auto it=dict.begin(); it!=dict.end(); it++)
-        {
-            mp[*it] = vector<string>();
-        }
-        qu[0].insert(start);
-        int i=0;
-        bool isdone = false;
-        while(!qu[i].empty())
-        {
-            i = 1-i;
-            qu[i].clear();
-            for(auto it=qu[1-i].begin(); it!=qu[1-i].end(); it++)
-            {
-                if(caldis(*it,end)==1)
-                {
-                    isdone = true;
-                    mp[end].push_back(*it);
-                }
-                dict.erase(*it);
+        cur.push_back(end->str);
+        if (!(end->prev).empty()) {
+            for (int i = 0; i < (end->prev).size(); i ++) {
+                getPath(Path, cur, hash, (end->prev)[i]);
             }
-            if(isdone) break;
-            for(auto it=qu[1-i].begin(); it!=qu[1-i].end(); it++)
-            {
-                string cur = *it;
-                for(int j=0; j<cur.size(); j++)
-                {
-                    for(char ch='a'; ch<='z'; ch++)
-                    {
-                        string tmp = cur;
-                        tmp[j] = ch;
-                        if(dict.find(tmp)!=dict.end())
-                        {
-                            mp[tmp].push_back(cur);
-                            qu[i].insert(tmp);
+        } else {
+            getPath(Path, cur, hash, NULL);
+        }
+        cur.pop_back();
+    }
+    vector<vector<string> > findLadders(string start, string end, unordered_set<string> &dict) {
+        // write your code here
+        dict.insert(end);
+        unordered_map<string, Node*> hash;
+        vector<vector<string> > res;
+        queue<string> q;
+        Node *startnode = new Node(1, start);
+        q.push(start);
+        hash[start] = startnode;
+        while (!q.empty()) {
+            string cur = q.front();
+            q.pop();
+            if (cur == end) {
+                vector<string> cur;
+                getPath(res, cur, hash, hash[end]);
+                return res;
+            }
+            for (int i = 0; i < cur.size(); i ++) {
+                for (int j = 0; j < 26; j ++) {
+                    string temp = cur;
+                    temp[i] = 'a' + j;
+                    if (dict.find(temp) != dict.end()) {
+                        Node *node = hash[cur];
+                        if (hash.find(temp) == hash.end()) {
+                            Node *new_node = new Node(node->dist + 1, temp);
+                            (new_node->prev).push_back(node);
+                            hash[temp] = new_node;
+                            q.push(temp);
+                        } else {
+                            Node *pnode = hash[temp];
+                            if (pnode->dist == node->dist + 1) {
+                                (pnode->prev).push_back(node);
+                            }
                         }
                     }
                 }
             }
         }
-        ans.clear();
-        now.clear();
-        if(!isdone) return ans;
-        dfs(mp,end,now,ans);
-        return ans;
+        return res;
     }
 };
